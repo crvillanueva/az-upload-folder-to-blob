@@ -85,13 +85,15 @@ async def main():
     parser.add_argument(
         "-f",
         "--filename",
-        help="azure Blob Storage connection string file",
+        type=str,
+        help="azure blob storage connection string file",
         default=DEFAULT_FILENAME_STR_CONNECTION,
     )
     parser.add_argument(
         "-d",
         "--directory",
-        help="directory name to upload",
+        type=str,
+        help="local directory to upload",
         default=DEFAULT_DIRECTORY_NAME,
     )
     args = parser.parse_args()
