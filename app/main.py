@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import argparse
 import asyncio
 import os
 import sys
@@ -13,6 +14,11 @@ from azure.storage.blob import ContentSettings
 from colorama import Fore
 
 colorama.init(autoreset=True)
+
+
+# config
+DEFAULT_FILENAME_STR_CONNECTION = "blob-storage-conn-str"
+DEFAULT_DIRECTORY_NAME = "build"
 
 
 async def upload_file_to_blob(
@@ -72,22 +78,35 @@ async def upload_folder_to_blob_container(
 
 
 async def main():
+    parser = argparse.ArgumentParser(
+        prog="AzFolderUploader", description="Upload a folder to Azure Blob Storage"
+    )
+
+    parser.add_argument(
+        "-f",
+        "--filename",
+        help="azure Blob Storage connection string file",
+        default=DEFAULT_FILENAME_STR_CONNECTION,
+    )
+    parser.add_argument(
+        "-d",
+        "--directory",
+        help="directory name to upload",
+        default=DEFAULT_DIRECTORY_NAME,
+    )
+    args = parser.parse_args()
+
     start_time = time.perf_counter()
 
-    FILENAME_STR_CONNECTION = "blob-storage-conn-str"
-
-    args = sys.argv
-    if len(args) > 1:
-        print(f"Getting credentials from string connection.")
-        connection_string_blob = args[1]
-    else:
-        print(f"Searching for credentials in {FILENAME_STR_CONNECTION}")
-        try:
-            with open(FILENAME_STR_CONNECTION, "r") as f:
-                connection_string_blob = f.read().strip()
-        except FileNotFoundError as e:
-            print(f"{Fore.RED + str(e)}")
-            sys.exit(1)
+    print(
+        f"Searching for credentials in {args.filename} from {os.getcwd()} ... {os.listdir()}"
+    )
+    try:
+        with open(args.filename, "r") as f:
+            connection_string_blob = f.read().strip()
+    except FileNotFoundError as e:
+        print(f"{Fore.RED + str(e)}")
+        sys.exit(1)
     await upload_folder_to_blob_container(connection_string_blob)
     end_time = time.perf_counter()
     print(
