@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Cristobal Villanueva <cristobaljvp@gmail.com>"]
 readme = "README.md"
-packages = [{include = "az_upload_folder_to_blob"}]
+packages = [{include = "app"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -16,3 +16,6 @@ aiohttp = "^3.8.3"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+az-blob-upload = "app.main:main"

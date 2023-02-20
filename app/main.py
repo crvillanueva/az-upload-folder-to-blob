@@ -77,7 +77,7 @@ async def upload_folder_to_blob_container(
     await asyncio.gather(*futures)
 
 
-async def main():
+async def upload_cli():
     parser = argparse.ArgumentParser(
         prog="AzFolderUploader", description="Upload a folder to Azure Blob Storage"
     )
@@ -116,5 +116,9 @@ async def main():
     )
 
 
+def main():
+    asyncio.run(upload_cli())
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
